@@ -9,7 +9,6 @@ namespace
 {
 	constexpr float GbaFrameMs = 1000.0f / 59.7275f;
 	constexpr float TiltDelayMs = 4 * GbaFrameMs;     // boardShakeIntensity = 4
-	constexpr float TiltCooldownMs = 24 * GbaFrameMs; // boardShakeTimer = 24
 	constexpr float Never = 1e30f;
 
 	enum class Tilt { None, Left, Right, Up };
@@ -21,7 +20,6 @@ namespace
 	// Tilt waiting for the GBA's 4-frame window (last direction pressed wins).
 	Tilt pendingTilt = Tilt::None;
 	float pendingMs = 0, pressAtMs = 0, heldForMs = -1; // heldForMs < 0: still held
-	float cooldownMs = 0;
 
 	// Nudge currently applied to the table.
 	// Space Cadet's tilt meter fills at 4x real time while a nudge is held ("Careful..." at 0.5,
@@ -76,10 +74,9 @@ namespace
 
 	void QueueTilt(Tilt direction)
 	{
+		// No GBA cooldown: Space Cadet's tilt meter is the only limit, as with its keyboard keys.
 		if (pendingTilt == Tilt::None)
 		{
-			if (cooldownMs > 0 || activeTilt != Tilt::None)
-				return;
 			pendingMs = TiltDelayMs;
 			pressAtMs = nowMs;
 		}
@@ -99,6 +96,8 @@ namespace
 	{
 		if (!pb::MainTable || pb::MainTable->TiltLockFlag)
 			return;
+		if (activeTilt != Tilt::None)
+			ReleaseNudge(); // a new press ends the previous nudge
 
 		// Same actions as Space Cadet's Left/Right/Bottom table bump keys.
 		switch (direction)
@@ -136,7 +135,7 @@ void gba_controls::Reset()
 		ReleaseNudge();
 	lHeld = rHeld = false;
 	pendingTilt = Tilt::None;
-	pendingMs = cooldownMs = 0;
+	pendingMs = 0;
 	heldForMs = -1;
 }
 
@@ -207,8 +206,6 @@ bool gba_controls::InputUp(int button)
 void gba_controls::Tick(float dtMs)
 {
 	nowMs += dtMs;
-	if (cooldownMs > 0)
-		cooldownMs -= dtMs;
 
 	if (pendingTilt != Tilt::None)
 	{
@@ -217,7 +214,6 @@ void gba_controls::Tick(float dtMs)
 		{
 			FireTilt(pendingTilt);
 			pendingTilt = Tilt::None;
-			cooldownMs = TiltCooldownMs;
 		}
 	}
 

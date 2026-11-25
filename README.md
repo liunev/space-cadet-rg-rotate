@@ -49,11 +49,13 @@ from the decompilation (`src/options.c`, `SetButtonConfigInputs`):
 | Start | Pause / resume (F3) |
 | Select | New game (F2): one press after game over, two presses within 3 s during a game |
 
-Tilt timing matches the GBA's `ProcessTiltInput`: a nudge fires 4 frames after the press, the
-last direction pressed in that window wins (that's how L+R becomes "up"), and there's a
-24-frame cooldown before the next one. The nudge itself lasts as long as you hold the
-button (like Space Cadet's keyboard nudge keys), so Space Cadet's tilt meter works as in the
-original: short taps are safe, holding a nudge too long or nudging too often tilts the table. Turn the setting off for Space Cadet's original
+Nudge timing takes the GBA's `ProcessTiltInput` delay: a nudge starts 4 frames after the press
+and the last direction pressed in that window wins (that's how L+R becomes "up"). The GBA's
+cooldown between tilts is left out. The nudge lasts as long as you hold the button, like
+Space Cadet's keyboard nudge keys, so its tilt meter works as in the original: short taps are
+safe, while holding a nudge or tapping rapidly shows "Careful..." and then tilts the table.
+
+Turn the setting off for Space Cadet's original
 controller layout (L1/R1 flippers, A plunger, D-pad nudge).
 
 The in-game "F3 to Resume" / "F2 Starts New Game" messages name Start and Select instead.

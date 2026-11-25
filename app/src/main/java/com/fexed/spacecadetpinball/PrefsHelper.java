@@ -19,6 +19,7 @@ public class PrefsHelper {
     private static final String KEY_TILTBUTTONS = "tiltbuttons";
     private static final String KEY_CUSTOMFONTS = "customfonts";
     private static final String KEY_CAMERAZOOM = "camerazoom";
+    private static final String KEY_GBACONTROLS = "gbacontrols";
 
     public static SharedPreferences getPrefs() {
         return prefs;
@@ -131,5 +132,14 @@ public class PrefsHelper {
 
     public static void setCameraZoom(int value) {
         prefs.edit().putInt(KEY_CAMERAZOOM, value).apply();
+    }
+
+    /** Pokemon Pinball (GBA) controller layout: D-pad Left/A flippers, B launch, L/R nudge. */
+    public static boolean getGbaControls() {
+        return prefs.getBoolean(KEY_GBACONTROLS, true);
+    }
+
+    public static void setGbaControls(boolean value) {
+        prefs.edit().putBoolean(KEY_GBACONTROLS, value).apply();
     }
 }

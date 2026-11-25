@@ -18,6 +18,7 @@
     <string name="camerazoom">Ball camera zoom</string>
     <string name="camerazoom_off">Ball camera: off (whole table)</string>
     <string name="camerazoom_value">Ball camera zoom: %.1fx</string>
+    <string name="gbacontrols">Pokémon Pinball (GBA) controls\nD-pad Left / A: flippers · B: launch · L / R: nudge · L+R: nudge up</string>
     <string name="customfonts">Custom fonts</string>
     <string name="plungerpopup">Plunger popup</string>
     <string name="plungerhint">Keep pressed on the screen to throw the ball</string>

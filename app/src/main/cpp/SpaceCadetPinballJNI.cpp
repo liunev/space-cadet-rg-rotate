@@ -146,3 +146,13 @@ JNIEXPORT void JNICALL
 Java_com_fexed_spacecadetpinball_MainActivity_setCameraZoom(JNIEnv *env, jobject thiz, jfloat zoom) {
     camera::Zoom = zoom;
 }
+
+#include "../../../../SpaceCadetPinball/gba_controls.h"
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_fexed_spacecadetpinball_MainActivity_setGbaControls(JNIEnv *env, jobject thiz, jboolean enabled) {
+    if (gba_controls::Enabled != (enabled == JNI_TRUE))
+        gba_controls::Reset();
+    gba_controls::Enabled = enabled == JNI_TRUE;
+}

@@ -30,7 +30,25 @@ multiball it follows the lowest ball.
 Zoom is set in **Settings > Ball camera zoom** (1.0x = original whole-table view, default 1.6x,
 max 3.0x). The score, balls and mission text are shown as an overlay.
 
-Controls on the RG Rotate: **L1/R1** flippers, **A** plunger, **D-pad** nudge.
+## Pokemon Pinball (GBA) controls
+
+On by default (Settings > Pokemon Pinball (GBA) controls). Uses the GBA game's default layout
+from the decompilation (`src/options.c`, `SetButtonConfigInputs`):
+
+| Button | Action |
+| --- | --- |
+| D-pad Left | Left flipper |
+| A | Right flipper |
+| B | Launch ball |
+| L / R | Nudge left / right |
+| L + R together | Nudge up |
+
+Tilt timing matches the GBA's `ProcessTiltInput`: a nudge fires 4 frames after the press, the
+last direction pressed in that window wins (that's how L+R becomes "up"), and there's a
+24-frame cooldown before the next one. Turn the setting off for Space Cadet's original
+controller layout (L1/R1 flippers, A plunger, D-pad nudge).
+
+Code: [`SpaceCadetPinball/gba_controls.cpp`](SpaceCadetPinball/gba_controls.cpp).
 
 Code: [`SpaceCadetPinball/camera.cpp`](SpaceCadetPinball/camera.cpp).
 

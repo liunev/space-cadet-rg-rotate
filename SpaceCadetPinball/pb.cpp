@@ -3,6 +3,7 @@
 
 
 #include "camera.h"
+#include "gba_controls.h"
 #include "control.h"
 #include "fullscrn.h"
 #include "high_score.h"
@@ -213,6 +214,8 @@ void pb::frame(float dtMilliSec)
 	if (dtMilliSec <= 0)
 		return;
 
+	gba_controls::Tick(dtMilliSec);
+
 	float dtSec = dtMilliSec * 0.001f;
 	time_next = time_now + dtSec;
 	timed_frame(time_now, dtSec, true);
@@ -357,6 +360,9 @@ void pb::InputUp(GameInput input)
 	if (game_mode != GameModes::InGame || winmain::single_step || demo_mode)
 		return;
 
+	if (input.Type == InputTypes::GameController && gba_controls::Enabled && gba_controls::InputUp(input.Value))
+		return;
+
 	if (AnyBindingMatchesInput(options::Options.Key.LeftFlipper, input))
 	{
 		MainTable->Message(1001, time_now);
@@ -387,6 +393,9 @@ void pb::InputDown(GameInput input)
 {
 	options::InputDown(input);
 	if (game_mode != GameModes::InGame ||winmain::single_step || demo_mode)
+		return;
+
+	if (input.Type == InputTypes::GameController && gba_controls::Enabled && gba_controls::InputDown(input.Value))
 		return;
 
 	if (input.Type == InputTypes::Keyboard)

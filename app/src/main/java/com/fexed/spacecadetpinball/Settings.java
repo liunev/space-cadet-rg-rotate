@@ -160,6 +160,9 @@ public class Settings extends AppCompatActivity {
             }
         });
 
+        mBinding.gbacontrols.setChecked(PrefsHelper.getGbaControls());
+        mBinding.gbacontrols.setOnCheckedChangeListener((compoundButton, checked) -> PrefsHelper.setGbaControls(checked));
+
         if (PrefsHelper.getCheatsUsed()) {
             mBinding.cheatindicatorlbl.setText(R.string.cheat_used);
             mBinding.cheatAlertSttngs.setVisibility(View.VISIBLE);

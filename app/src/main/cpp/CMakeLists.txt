@@ -11,6 +11,8 @@ set(SOURCE_FILES
         ../../../../SpaceCadetPinball/EmbeddedData.h
         ../../../../SpaceCadetPinball/fullscrn.cpp
         ../../../../SpaceCadetPinball/fullscrn.h
+        ../../../../SpaceCadetPinball/gba_controls.cpp
+        ../../../../SpaceCadetPinball/gba_controls.h
         ../../../../SpaceCadetPinball/gdrv.cpp
         ../../../../SpaceCadetPinball/gdrv.h
         ../../../../SpaceCadetPinball/GroupData.cpp

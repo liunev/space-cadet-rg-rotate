@@ -359,6 +359,7 @@ public class MainActivity extends SDLActivity {
         PrefsHelper.setCheatsUsed(checkCheatsUsed());
         setFullscreen();
         setCameraZoom(PrefsHelper.getCameraZoom() / 100f);
+        setGbaControls(PrefsHelper.getGbaControls());
         setTiltButtons();
         setCustomFonts();
         setBallsText();
@@ -503,4 +504,6 @@ public class MainActivity extends SDLActivity {
     private native boolean checkCheatsUsed();
 
     private native void setCameraZoom(float zoom);
+
+    private native void setGbaControls(boolean enabled);
 }

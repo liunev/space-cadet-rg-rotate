@@ -28,7 +28,11 @@ proportion to the ball's x position, with the same easing, dead zone and speed l
 multiball it follows the lowest ball.
 
 Zoom is set in **Settings > Ball camera zoom** (1.0x = original whole-table view, default 1.6x,
-max 3.0x). The score, balls and mission text are shown as an overlay.
+max 3.0x). While zoomed, the score, ball number and the info/mission text from the game's
+sidebar move into a bar at the top of the screen, and the table is drawn below it, so nothing
+covers the playfield. Setting the zoom to 1.0x brings back the original layout.
+
+Code: [`SpaceCadetPinball/camera.cpp`](SpaceCadetPinball/camera.cpp).
 
 ## Pokemon Pinball (GBA) controls
 
@@ -48,9 +52,10 @@ last direction pressed in that window wins (that's how L+R becomes "up"), and th
 24-frame cooldown before the next one. Turn the setting off for Space Cadet's original
 controller layout (L1/R1 flippers, A plunger, D-pad nudge).
 
-Code: [`SpaceCadetPinball/gba_controls.cpp`](SpaceCadetPinball/gba_controls.cpp).
+While it's on, the on-screen touch zone labels (Left/Right/Tilt) and the "keep pressed to
+launch" hint are hidden; the touch zones themselves still work.
 
-Code: [`SpaceCadetPinball/camera.cpp`](SpaceCadetPinball/camera.cpp).
+Code: [`SpaceCadetPinball/gba_controls.cpp`](SpaceCadetPinball/gba_controls.cpp).
 
 ## Building
 

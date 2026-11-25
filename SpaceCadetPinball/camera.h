@@ -15,13 +15,17 @@ public:
 
 	static bool Enabled() { return Zoom > 1.0f; }
 
+	// Output pixels at the top of the screen covered by the Android HUD bar (score, ball,
+	// mission text). The table is drawn below it; the zoom level is unaffected.
+	static int HudTop;
+
 	// Snap to the plunger and play the board-intro pan (top of table -> plunger),
 	// like the GBA game does when a board starts.
 	static void StartIntro();
 
 	// Advance the camera by realDtMs and compute the table-space view to draw.
 	// tableW/tableH: playfield size in vscreen pixels.
-	// outW/outH: output size in screen pixels.
+	// outW/outH: output size in screen pixels (the view is placed below HudTop).
 	// shakeX/shakeY: nudge offset from render::shift (vscreen pixels).
 	// Outputs the integer source rect plus a sub-pixel destination rect.
 	static void Update(float realDtMs, int tableW, int tableH, int outW, int outH,

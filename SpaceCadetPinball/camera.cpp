@@ -56,6 +56,7 @@ namespace
 }
 
 float camera::Zoom = 1.6f;
+int camera::HudTop = 0;
 bool camera::initialized = false, camera::introPending = true;
 float camera::accumulatorMs = 0;
 float camera::camX = 0, camera::camY = 0;
@@ -121,10 +122,13 @@ void camera::Step(float viewW, float viewH, int tableW, int tableH, bool haveBal
 void camera::Update(float realDtMs, int tableW, int tableH, int outW, int outH,
                     int shakeX, int shakeY, SDL_Rect* src, SDL_FRect* dst)
 {
+	// Magnification is based on the whole screen so the HUD doesn't change the zoom level;
+	// the HUD only takes away some of the view's height.
 	const float fit = std::min(static_cast<float>(outW) / tableW, static_cast<float>(outH) / tableH);
 	const float scale = fit * Zoom;
+	const int hudTop = std::max(0, std::min(HudTop, outH / 2));
 	const float viewW = outW / scale;
-	const float viewH = outH / scale;
+	const float viewH = (outH - hudTop) / scale;
 	const float k = viewH / GbaScreenH;
 
 	float ballX = 0, ballY = 0;
@@ -190,7 +194,7 @@ void camera::Update(float realDtMs, int tableW, int tableH, int outW, int outH,
 	*dst = SDL_FRect
 	{
 		(sx0 - vx) * scale,
-		(sy0 - vy) * scale,
+		(sy0 - vy) * scale + hudTop,
 		(sx1 - sx0) * scale,
 		(sy1 - sy0) * scale
 	};

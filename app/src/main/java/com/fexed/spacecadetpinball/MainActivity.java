@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.widget.TextViewCompat;
 
 import org.libsdl.app.SDLActivity;
 
@@ -30,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.NumberFormat;
 
 import com.fexed.spacecadetpinball.databinding.ActivityMainBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -47,6 +49,8 @@ public class MainActivity extends SDLActivity {
     private BottomSheetBehavior<ConstraintLayout> bottomSheetBehavior;
 
     private int gamesInSession = 0;
+    private boolean hudMode = false;
+    private boolean rotatedToLandscape = false;
 
     static private MediaPlayer player;
 
@@ -139,24 +143,14 @@ public class MainActivity extends SDLActivity {
             return true;
         });
 
-        mBinding.playpause.setOnClickListener(view -> {
-            if (isPlaying) {
-                isPlaying = false;
-                pauseNativeThread();
-                if (PrefsHelper.getMusic()) player.pause();
-                mBinding.playpause.setImageDrawable(getContext().getResources().getDrawable(R.drawable.play));
-            } else {
-                isPlaying = true;
-                resumeNativeThread();
-                if (PrefsHelper.getMusic()) player.start();
-                mBinding.playpause.setImageDrawable(getContext().getResources().getDrawable(R.drawable.pause));
-
-            }
-        });
+        mBinding.playpause.setOnClickListener(view -> togglePause());
+        mBinding.hudPause.setOnClickListener(view -> togglePause());
 
         mBinding.replay.setOnClickListener(view -> {
             Toast.makeText(getContext(), R.string.restartprompt, Toast.LENGTH_SHORT).show();
         });
+        mBinding.hudReplay.setOnClickListener(view -> mBinding.replay.performClick());
+        mBinding.hudReplay.setOnLongClickListener(view -> mBinding.replay.performLongClick());
 
 
         mBinding.tiltLeft.setOnTouchListener((v1, event) -> {
@@ -196,7 +190,60 @@ public class MainActivity extends SDLActivity {
             Intent i = new Intent(this, Settings.class);
             startActivity(i);
         });
+        mBinding.hudSettings.setOnClickListener(view -> mBinding.settingsbtn.performClick());
 
+        TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(mBinding.hudInfo, 10, 16, 1, android.util.TypedValue.COMPLEX_UNIT_SP);
+        TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(mBinding.hudMission, 9, 14, 1, android.util.TypedValue.COMPLEX_UNIT_SP);
+
+        // Tell the native camera how much of the top of the screen the HUD bar covers.
+        mBinding.hud.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> pushHudTop());
+    }
+
+    private void togglePause() {
+        isPlaying = !isPlaying;
+        if (isPlaying) {
+            resumeNativeThread();
+            if (PrefsHelper.getMusic() && player != null) player.start();
+        } else {
+            pauseNativeThread();
+            if (PrefsHelper.getMusic() && player != null) player.pause();
+        }
+        int icon = isPlaying ? R.drawable.pause : R.drawable.play;
+        mBinding.playpause.setImageResource(icon);
+        mBinding.hudPause.setImageResource(icon);
+    }
+
+    private void pushHudTop() {
+        setHudTop(hudMode && mBinding.hud.getVisibility() == View.VISIBLE ? mBinding.hud.getBottom() : 0);
+    }
+
+    /** With the ball camera on, the score and texts move into a bar above the zoomed table. */
+    private void updateHudMode() {
+        hudMode = PrefsHelper.getCameraZoom() > 100;
+        int overlay = !hudMode && !rotatedToLandscape ? View.VISIBLE : View.GONE;
+        mBinding.infotxt.setVisibility(overlay);
+        mBinding.missiontxt.setVisibility(overlay);
+        mBinding.txtscore.setVisibility(overlay);
+        mBinding.ballstxt.setVisibility(overlay);
+        int buttons = hudMode ? View.GONE : View.VISIBLE;
+        mBinding.replay.setVisibility(buttons);
+        mBinding.playpause.setVisibility(buttons);
+        mBinding.settingsbtn.setVisibility(buttons);
+        mBinding.hud.setVisibility(hudMode ? View.VISIBLE : View.GONE);
+        pushHudTop();
+
+        // With a controller layout the on-screen touch zone labels just cover the table.
+        boolean labels = !PrefsHelper.getGbaControls();
+        mBinding.left.setText(labels ? getString(R.string.left) : "");
+        mBinding.right.setText(labels ? getString(R.string.right) : "");
+        String tilt = labels ? getString(R.string.tilt) : "";
+        mBinding.tiltLeft.setText(tilt);
+        mBinding.tiltRight.setText(tilt);
+        mBinding.tiltBottom.setText(tilt);
+    }
+
+    private static String formatScore(int score) {
+        return NumberFormat.getIntegerInstance().format(score);
     }
 
     private void copyAssets(File filesDir) {
@@ -253,7 +300,7 @@ public class MainActivity extends SDLActivity {
                 if (isBallInPlunger) {
                     plungerTimer = new Handler(Looper.getMainLooper());
                     plungerTimer.postDelayed(() -> runOnUiThread(() -> {
-                        if (PrefsHelper.getPlungerPopup()) {
+                        if (PrefsHelper.getPlungerPopup() && !PrefsHelper.getGbaControls()) {
                             Toast.makeText(getContext(), R.string.plungerhint, Toast.LENGTH_LONG).show();
                         }
                         mBinding.plunger.setVisibility(View.VISIBLE);
@@ -284,20 +331,36 @@ public class MainActivity extends SDLActivity {
         @Override
         public void onStringPresented(String str, int type) {
             final String fstr = str.replace("\n", " ");
-            if (type == 1) runOnUiThread(() -> mBinding.missiontxt.setText(fstr));
-            else runOnUiThread(() -> mBinding.infotxt.setText(fstr));
+            if (type == 1) runOnUiThread(() -> {
+                mBinding.missiontxt.setText(fstr);
+                mBinding.hudMission.setText(fstr);
+            });
+            else runOnUiThread(() -> {
+                mBinding.infotxt.setText(fstr);
+                mBinding.hudInfo.setText(fstr);
+            });
         }
 
         @Override
         public void onClearText(int type) {
-            if (type == 1) runOnUiThread(() -> mBinding.missiontxt.setText(""));
-            else runOnUiThread(() -> mBinding.infotxt.setText(""));
+            if (type == 1) runOnUiThread(() -> {
+                mBinding.missiontxt.setText("");
+                mBinding.hudMission.setText("");
+            });
+            else runOnUiThread(() -> {
+                mBinding.infotxt.setText("");
+                mBinding.hudInfo.setText("");
+            });
         }
 
         @Override
         public void onScorePosted(int score) {
             String str = "" + score;
-            runOnUiThread(() -> mBinding.txtscore.setText(str));
+            String hudStr = formatScore(score);
+            runOnUiThread(() -> {
+                mBinding.txtscore.setText(str);
+                mBinding.hudScore.setText(hudStr);
+            });
         }
 
         @Override
@@ -305,7 +368,7 @@ public class MainActivity extends SDLActivity {
             ballCount = count;
             if (!PrefsHelper.getRemainingBalls()) {
                 String str = getString(R.string.balls, count);
-                runOnUiThread(() -> mBinding.ballstxt.setText(str));
+                runOnUiThread(() -> setBallsText(str));
             }
         }
 
@@ -325,7 +388,7 @@ public class MainActivity extends SDLActivity {
             remainingBalls = balls;
             if (PrefsHelper.getRemainingBalls()) {
                 String str = getString(R.string.remainingballs, balls);
-                runOnUiThread(() -> mBinding.ballstxt.setText(str));
+                runOnUiThread(() -> setBallsText(str));
             }
         }
     };
@@ -360,6 +423,7 @@ public class MainActivity extends SDLActivity {
         setFullscreen();
         setCameraZoom(PrefsHelper.getCameraZoom() / 100f);
         setGbaControls(PrefsHelper.getGbaControls());
+        updateHudMode();
         setTiltButtons();
         setCustomFonts();
         setBallsText();
@@ -369,11 +433,16 @@ public class MainActivity extends SDLActivity {
     private void setBallsText() {
         if (!PrefsHelper.getRemainingBalls()) {
             String str = getString(R.string.balls, ballCount);
-            mBinding.ballstxt.setText(str);
+            setBallsText(str);
         } else {
             String str = getString(R.string.remainingballs, remainingBalls);
-            mBinding.ballstxt.setText(str);
+            setBallsText(str);
         }
+    }
+
+    private void setBallsText(String str) {
+        mBinding.ballstxt.setText(str);
+        mBinding.hudBall.setText(str);
     }
 
     private void configurePlunger() {
@@ -406,6 +475,15 @@ public class MainActivity extends SDLActivity {
             mBinding.infotxt.setTextColor(ResourcesCompat.getColor(getResources(), R.color.purple_200, getTheme()));
             mBinding.missiontxt.setTypeface(ResourcesCompat.getFont(getContext(), R.font.bauhauscheavy));
             mBinding.missiontxt.setTextColor(ResourcesCompat.getColor(getResources(), R.color.purple_200, getTheme()));
+            Typeface bauhaus = ResourcesCompat.getFont(getContext(), R.font.bauhauscheavy);
+            int purple = ResourcesCompat.getColor(getResources(), R.color.purple_200, getTheme());
+            mBinding.hudScore.setTypeface(bauhaus);
+            mBinding.hudScore.setTextColor(purple);
+            mBinding.hudBall.setTypeface(bauhaus);
+            mBinding.hudBall.setTextColor(purple);
+            mBinding.hudInfo.setTypeface(bauhaus);
+            mBinding.hudInfo.setTextColor(Color.WHITE);
+            mBinding.hudMission.setTypeface(bauhaus);
             mBinding.plunger.setTypeface(ResourcesCompat.getFont(getContext(), R.font.bauhauscheavy));
             // not editing the plunger because it's a button (and using its color as default color)
             mBinding.bottomPlunger.setTypeface(ResourcesCompat.getFont(getContext(), R.font.bauhauscheavy));
@@ -429,6 +507,13 @@ public class MainActivity extends SDLActivity {
             mBinding.infotxt.setTextColor(Color.WHITE);
             mBinding.missiontxt.setTypeface(Typeface.DEFAULT);
             mBinding.missiontxt.setTextColor(Color.WHITE);
+            mBinding.hudScore.setTypeface(Typeface.DEFAULT_BOLD);
+            mBinding.hudScore.setTextColor(Color.WHITE);
+            mBinding.hudBall.setTypeface(Typeface.DEFAULT);
+            mBinding.hudBall.setTextColor(Color.WHITE);
+            mBinding.hudInfo.setTypeface(Typeface.DEFAULT);
+            mBinding.hudInfo.setTextColor(Color.WHITE);
+            mBinding.hudMission.setTypeface(Typeface.DEFAULT);
             mBinding.plunger.setTypeface(Typeface.DEFAULT);
             mBinding.tiltLeft.setTypeface(Typeface.DEFAULT);
             mBinding.tiltLeft.setTextColor(Color.WHITE);
@@ -448,18 +533,8 @@ public class MainActivity extends SDLActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mBinding.infotxt.setVisibility(View.GONE);
-            mBinding.missiontxt.setVisibility(View.GONE);
-            mBinding.txtscore.setVisibility(View.GONE);
-            mBinding.ballstxt.setVisibility(View.GONE);
-        } else {
-            mBinding.infotxt.setVisibility(View.VISIBLE);
-            mBinding.missiontxt.setVisibility(View.VISIBLE);
-            mBinding.txtscore.setVisibility(View.VISIBLE);
-            mBinding.ballstxt.setVisibility(View.VISIBLE);
-        }
+        rotatedToLandscape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
+        updateHudMode();
     }
 
     @Override
@@ -506,4 +581,6 @@ public class MainActivity extends SDLActivity {
     private native void setCameraZoom(float zoom);
 
     private native void setGbaControls(boolean enabled);
+
+    private native void setHudTop(int px);
 }

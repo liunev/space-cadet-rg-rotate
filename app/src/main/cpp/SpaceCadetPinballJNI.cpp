@@ -147,6 +147,12 @@ Java_com_fexed_spacecadetpinball_MainActivity_setCameraZoom(JNIEnv *env, jobject
     camera::Zoom = zoom;
 }
 
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_fexed_spacecadetpinball_MainActivity_setHudTop(JNIEnv *env, jobject thiz, jint px) {
+    camera::HudTop = px;
+}
+
 #include "../../../../SpaceCadetPinball/gba_controls.h"
 
 extern "C"

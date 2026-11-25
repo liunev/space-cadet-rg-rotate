@@ -139,3 +139,10 @@ JNIEXPORT jboolean JNICALL
 Java_com_fexed_spacecadetpinball_MainActivity_checkCheatsUsed(JNIEnv *env, jobject thiz) {
     return control::check_cheats();
 }
+#include "../../../../SpaceCadetPinball/camera.h"
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_fexed_spacecadetpinball_MainActivity_setCameraZoom(JNIEnv *env, jobject thiz, jfloat zoom) {
+    camera::Zoom = zoom;
+}

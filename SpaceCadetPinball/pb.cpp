@@ -2,6 +2,7 @@
 #include "pb.h"
 
 
+#include "camera.h"
 #include "control.h"
 #include "fullscrn.h"
 #include "high_score.h"
@@ -187,6 +188,7 @@ void pb::toggle_demo()
 void pb::replay_level(bool demoMode)
 {
 	demo_mode = demoMode;
+	camera::StartIntro();
 	SpaceCadetPinballJNI::notifyGameState(SpaceCadetPinballJNI::GAMESTATE::RUNNING);
 	mode_change(GameModes::InGame);
 	if (options::Options.Music)

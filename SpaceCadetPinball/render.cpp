@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "render.h"
 
+#include "camera.h"
+
 #include "fullscrn.h"
 #include "GroupData.h"
 #include "options.h"
@@ -461,9 +463,47 @@ void render::BlitVScreen()
 	SDL_UnlockTexture(vScreenTex);
 }
 
+bool render::get_focus_ball(float* x, float* y)
+{
+	// The camera follows the lowest visible ball (the one closest to the flippers).
+	bool found = false;
+	for (auto ball : ball_list)
+	{
+		if (!ball->Bmp)
+			continue;
+		float cx = ball->BmpRect.XPosition + ball->BmpRect.Width / 2.0f;
+		float cy = ball->BmpRect.YPosition + ball->BmpRect.Height / 2.0f;
+		if (!found || cy > *y)
+		{
+			*x = cx;
+			*y = cy;
+			found = true;
+		}
+	}
+	return found;
+}
+
 void render::PresentVScreen()
 {
 	BlitVScreen();
+
+	if (camera::Enabled() && pb::MainTable)
+	{
+		using Clock = std::chrono::steady_clock;
+		static Clock::time_point lastPresent = Clock::now();
+		auto now = Clock::now();
+		auto dtMs = std::chrono::duration<float, std::milli>(now - lastPresent).count();
+		lastPresent = now;
+
+		int outW, outH;
+		SDL_GetRendererOutputSize(winmain::Renderer, &outW, &outH);
+		SDL_Rect src;
+		SDL_FRect dst;
+		camera::Update(dtMs, pb::MainTable->Width, vscreen->Height, outW, outH,
+		               offset_x, offset_y, &src, &dst);
+		SDL_RenderCopyF(winmain::Renderer, vScreenTex, &src, &dst);
+		return;
+	}
 
 	if (offset_x == 0 && offset_y == 0)
 	{

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Space Cadet Pinball</string>
+    <string name="app_name">Space Cadet RG Rotate</string>
     <string name="left">Sinistra</string>
     <string name="right">Destra</string>
     <string name="plunger">Lanciatore</string>

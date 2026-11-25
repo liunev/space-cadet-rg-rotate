@@ -142,6 +142,24 @@ public class Settings extends AppCompatActivity {
             }
         });
 
+        updateCameraZoomLabel(PrefsHelper.getCameraZoom());
+        mBinding.camerazoombar.setProgress(PrefsHelper.getCameraZoom() - 100);
+        mBinding.camerazoombar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+                PrefsHelper.setCameraZoom(progress + 100);
+                updateCameraZoomLabel(progress + 100);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
         if (PrefsHelper.getCheatsUsed()) {
             mBinding.cheatindicatorlbl.setText(R.string.cheat_used);
             mBinding.cheatAlertSttngs.setVisibility(View.VISIBLE);
@@ -299,5 +317,13 @@ public class Settings extends AppCompatActivity {
         };
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         queue.add(GETReleaseRequest);
+    }
+
+    private void updateCameraZoomLabel(int percent) {
+        if (percent <= 100) {
+            mBinding.camerazoomlbl.setText(getString(R.string.camerazoom_off));
+        } else {
+            mBinding.camerazoomlbl.setText(getString(R.string.camerazoom_value, percent / 100f));
+        }
     }
 }

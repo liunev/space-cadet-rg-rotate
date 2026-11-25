@@ -18,6 +18,7 @@ public class PrefsHelper {
     private static final String KEY_SHOULDSHOWBOTTOMPLUNGER = "shouldshowbottomplunger";
     private static final String KEY_TILTBUTTONS = "tiltbuttons";
     private static final String KEY_CUSTOMFONTS = "customfonts";
+    private static final String KEY_CAMERAZOOM = "camerazoom";
 
     public static SharedPreferences getPrefs() {
         return prefs;
@@ -121,5 +122,14 @@ public class PrefsHelper {
 
     public static boolean getMusic() {
         return prefs.getBoolean(KEY_MUSIC, true);
+    }
+
+    /** Camera zoom in percent: 100 = whole table (camera off), up to 300. */
+    public static int getCameraZoom() {
+        return prefs.getInt(KEY_CAMERAZOOM, 160);
+    }
+
+    public static void setCameraZoom(int value) {
+        prefs.edit().putInt(KEY_CAMERAZOOM, value).apply();
     }
 }

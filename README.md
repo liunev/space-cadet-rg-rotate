@@ -1,6 +1,48 @@
 <!-- markdownlint-disable-file MD033 -->
 
-# Pinball-on-Android
+# Space Cadet RG Rotate
+
+A fork of [fexed/Pinball-on-Android](https://github.com/fexed/Pinball-on-Android) tuned for the
+**Anbernic RG Rotate** (3.5" 720x720 square screen) and other small displays.
+
+## Ball camera
+
+The whole table plus the score sidebar is tiny on a 3.5" screen, so this fork adds a zoomed
+camera that follows the ball. It's a port of the camera from **Pokemon Pinball: Ruby & Sapphire**
+(GBA), taken from the [pret/pokepinballrs](https://github.com/pret/pokepinballrs) decompilation
+(`src/all_board_process2.c`, `UpdateFrameProcess2_CameraShakeDrain_MainBoards`):
+
+- **Look-ahead:** the camera centres on a point 16 px below the ball plus 10 frames of the ball's
+  vertical velocity, so it leads toward the flippers when the ball falls and toward the top when
+  it is shot up. The look-ahead eases in (1/10 per frame).
+- **Easing:** each frame the camera closes 1/12 of the distance to that point.
+- **Dead zone:** steps smaller than 80/256 px are dropped, so the view stays still when settled.
+- **Scroll limit:** the drawn view moves at most 8 px per frame.
+- **Board intro:** when a game starts, the view pans from the top of the table down to the plunger.
+- **Nudges** still shake the table.
+
+Distances are scaled by `view height / 160` (the GBA screen height), so the motion feels the same
+relative to the screen as on the Game Boy Advance. The GBA board is only 16 px wider than its
+screen; Space Cadet zoomed in is much wider than the view, so horizontally the camera pans in
+proportion to the ball's x position, with the same easing, dead zone and speed limit. During
+multiball it follows the lowest ball.
+
+Zoom is set in **Settings > Ball camera zoom** (1.0x = original whole-table view, default 1.6x,
+max 3.0x). The score, balls and mission text are shown as an overlay.
+
+Controls on the RG Rotate: **L1/R1** flippers, **A** plunger, **D-pad** nudge.
+
+Code: [`SpaceCadetPinball/camera.cpp`](SpaceCadetPinball/camera.cpp).
+
+## Building
+
+Requires JDK 17-21, Android SDK platform 35, NDK `25.2.9519653` and CMake 4.1.2 (via the SDK
+manager). Then `./gradlew assembleDebug`. The fork installs as `com.liunev.spacecadetrgrotate`, so it
+can sit next to the original app. Firebase analytics was removed.
+
+---
+
+# Pinball-on-Android (upstream README)
 [![Android CI](https://github.com/fexed/Pinball-on-Android/actions/workflows/android.yml/badge.svg)](https://github.com/fexed/Pinball-on-Android/actions/workflows/android.yml)
 [![Validate Fastlane](https://github.com/fexed/Pinball-on-Android/actions/workflows/build.yml/badge.svg)](https://github.com/fexed/Pinball-on-Android/actions/workflows/build.yml)
 ## Summary

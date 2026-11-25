@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Space Cadet Pinball</string>
+    <string name="app_name">Space Cadet RG Rotate</string>
     <string name="left">Left</string>
     <string name="right">Right</string>
     <string name="plunger">Plunger</string>
@@ -15,6 +15,9 @@
     <string name="credits">3D Pinball Table was created for Microsoft by Maxis.\nCopyright © 1995 Maxis.\n\nReverse engineering by: k4zmu2a\nOriginal Android port by: Iscle\nCurrent Android port by: fexed, th3vanger</string>
     <string name="restartprompt">Long tap to restart the game</string>
     <string name="volume">Volume</string>
+    <string name="camerazoom">Ball camera zoom</string>
+    <string name="camerazoom_off">Ball camera: off (whole table)</string>
+    <string name="camerazoom_value">Ball camera zoom: %.1fx</string>
     <string name="customfonts">Custom fonts</string>
     <string name="plungerpopup">Plunger popup</string>
     <string name="plungerhint">Keep pressed on the screen to throw the ball</string>

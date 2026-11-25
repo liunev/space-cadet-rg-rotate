@@ -3,6 +3,8 @@ set(CMAKE_CXX_STANDARD 11)
 project(SpaceCadetPinball)
 
 set(SOURCE_FILES
+        ../../../../SpaceCadetPinball/camera.cpp
+        ../../../../SpaceCadetPinball/camera.h
         ../../../../SpaceCadetPinball/control.cpp
         ../../../../SpaceCadetPinball/control.h
         ../../../../SpaceCadetPinball/EmbeddedData.cpp

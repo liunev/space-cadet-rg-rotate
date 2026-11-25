@@ -12,21 +12,19 @@
     <string name="remainingballssettings">Remaining balls indicator</string>
     <string name="tiltbuttons">Tilt buttons</string>
     <string name="username">Username</string>
-    <string name="credits">3D Pinball Table was created for Microsoft by Maxis.\nCopyright © 1995 Maxis.\n\nReverse engineering by: k4zmu2a\nOriginal Android port by: Iscle\nCurrent Android port by: fexed, th3vanger</string>
+    <string name="credits">3D Pinball Table was created for Microsoft by Maxis.\nCopyright © 1995 Maxis.\n\nReverse engineering by: k4zmu2a\nOriginal Android port by: Iscle\nAndroid port by: fexed, th3vanger\nRG Rotate port by: liunev</string>
     <string name="restartprompt">Long tap to restart the game</string>
     <string name="volume">Volume</string>
     <string name="camerazoom">Ball camera zoom</string>
     <string name="camerazoom_off">Ball camera: off (whole table)</string>
     <string name="camerazoom_value">Ball camera zoom: %.1fx</string>
     <string name="gbacontrols">Pokémon Pinball (GBA) controls\nD-pad Left / A: flippers · B: launch · L / R: nudge · L+R: nudge up · Start: pause · Select: new game</string>
-    <string name="onlineleaderboard">Global online leaderboard\nWhen off, nothing is sent to or loaded from the leaderboard server</string>
     <string name="gamepad_paused">Game Paused\nStart to Resume</string>
     <string name="gamepad_newgame">Select Starts New Game</string>
     <string name="customfonts">Custom fonts</string>
     <string name="plungerpopup">Plunger popup</string>
     <string name="plungerhint">Keep pressed on the screen to throw the ball</string>
-    <string name="goto_googleplay"><u><a hred="https://play.google.com/store/apps/dev?id=6687966458279653723">Check out my other apps!</a></u></string>
-    <string name="goto_github"><u><a hred="https://github.com/fexed/Pinball-on-Android/releases">Check out the latest version</a></u></string>
+    <string name="goto_github">Check out the latest version</string>
     <string name="cheat_title">Cheats</string>
     <string name="cheat_disclaimer">Activate before launching your first ball (note: some cheats are still not working)</string>
     <string name="cheat_gmax">gmax - Enables the Gravity Well</string>
@@ -62,4 +60,11 @@
     <string name="fullscreenplunger">Full screen plunger</string>
     <string name="onlyhigherthan">Showing only the players with a score greater than 0, meaning %d out of the %d total players</string>
     <string name="music">Music</string>
+    <string name="highscores_title">High Scores</string>
+    <string name="localscores_button">Show high scores</string>
+    <string name="highscores_empty">No games played yet. Finish a game to get on the board!</string>
+    <string name="highscores_clear">Clear high scores</string>
+    <string name="highscores_clear_confirm">Delete all high scores stored on this device?</string>
+    <string name="highscores_rank">%d.</string>
+    <string name="highscores_cheats">cheats used</string>
 </resources>

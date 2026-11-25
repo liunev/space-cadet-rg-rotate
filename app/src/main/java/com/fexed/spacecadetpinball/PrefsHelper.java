@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 public class PrefsHelper {
     static private SharedPreferences prefs;
 
-    private static final String KEY_USERID = "userid";
     private static final String KEY_USERNAME = "username";
     private static final String KEY_HIGHSCORE = "highscore";
     private static final String KEY_CHEATHIGHSCORE = "cheathighscore";
@@ -20,7 +19,7 @@ public class PrefsHelper {
     private static final String KEY_CUSTOMFONTS = "customfonts";
     private static final String KEY_CAMERAZOOM = "camerazoom";
     private static final String KEY_GBACONTROLS = "gbacontrols";
-    private static final String KEY_ONLINELEADERBOARD = "onlineleaderboard";
+    private static final String KEY_LOCALSCORES = "localscores";
 
     public static SharedPreferences getPrefs() {
         return prefs;
@@ -110,13 +109,6 @@ public class PrefsHelper {
         prefs.edit().putInt(KEY_HIGHSCORE, value).apply();
     }
 
-    public static String getUserId() {
-        return prefs.getString(KEY_USERID, "0");
-    }
-
-    public static void setUserId(String value) {
-        prefs.edit().putString(KEY_USERID, value).apply();
-    }
 
     public static void setMusic(boolean value) {
         prefs.edit().putBoolean(KEY_MUSIC, value).apply();
@@ -144,12 +136,12 @@ public class PrefsHelper {
         prefs.edit().putBoolean(KEY_GBACONTROLS, value).apply();
     }
 
-    /** Global online leaderboard. Off = no score uploads and no ranking downloads. */
-    public static boolean getOnlineLeaderboard() {
-        return prefs.getBoolean(KEY_ONLINELEADERBOARD, true);
+    /** Local high score table as a JSON array, see LocalScores. */
+    public static String getLocalScores() {
+        return prefs.getString(KEY_LOCALSCORES, "[]");
     }
 
-    public static void setOnlineLeaderboard(boolean value) {
-        prefs.edit().putBoolean(KEY_ONLINELEADERBOARD, value).apply();
+    public static void setLocalScores(String json) {
+        prefs.edit().putString(KEY_LOCALSCORES, json).apply();
     }
 }

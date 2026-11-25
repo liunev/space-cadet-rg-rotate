@@ -30,6 +30,7 @@ import com.android.volley.toolbox.Volley;
 import com.fexed.spacecadetpinball.databinding.ActivityMainBinding;
 import com.fexed.spacecadetpinball.databinding.ActivitySettingsBinding;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.libsdl.app.SDLActivity;
@@ -42,18 +43,18 @@ public class Settings extends AppCompatActivity {
 
     private ActivitySettingsBinding mBinding;
 
+    // Updates come from this fork's GitHub releases. Tag releases as v<versionName>, e.g. v1.1.
+    private static final String RELEASES_API = "https://api.github.com/repos/liunev/space-cadet-rg-rotate/releases/latest";
+    private static final String RELEASES_PAGE = "https://github.com/liunev/space-cadet-rg-rotate/releases";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = ActivitySettingsBinding.inflate(getLayoutInflater());
         View view = mBinding.getRoot();
         setContentView(view);
-        if (PrefsHelper.getUsername(null) != null && PrefsHelper.getOnlineLeaderboard()) {
-            HighScoreHandler.postScore(getApplicationContext(), false);
-        }
-
         int score = PrefsHelper.getHighScore();
-        String txt = score + "";
+        String txt = java.text.NumberFormat.getIntegerInstance().format(score);
         mBinding.highscoretxtv.setText(txt);
 
         txt = BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")";
@@ -117,12 +118,11 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        mBinding.gplaytxtv.setOnClickListener(v -> {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/dev?id=6687966458279653723"));
-            startActivity(browserIntent);
-        });
+        SpannableString releasesLink = new SpannableString(getString(R.string.goto_github));
+        releasesLink.setSpan(new UnderlineSpan(), 0, releasesLink.length(), 0);
+        mBinding.githubtxtv.setText(releasesLink);
         mBinding.githubtxtv.setOnClickListener(v -> {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/fexed/Pinball-on-Android/releases/latest"));
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(RELEASES_PAGE));
             startActivity(browserIntent);
         });
 
@@ -162,13 +162,6 @@ public class Settings extends AppCompatActivity {
 
         mBinding.gbacontrols.setChecked(PrefsHelper.getGbaControls());
         mBinding.gbacontrols.setOnCheckedChangeListener((compoundButton, checked) -> PrefsHelper.setGbaControls(checked));
-
-        mBinding.onlineleaderboard.setChecked(PrefsHelper.getOnlineLeaderboard());
-        mBinding.rankingbtnlyt.setVisibility(PrefsHelper.getOnlineLeaderboard() ? View.VISIBLE : View.GONE);
-        mBinding.onlineleaderboard.setOnCheckedChangeListener((compoundButton, checked) -> {
-            PrefsHelper.setOnlineLeaderboard(checked);
-            mBinding.rankingbtnlyt.setVisibility(checked ? View.VISIBLE : View.GONE);
-        });
 
         if (PrefsHelper.getCheatsUsed()) {
             mBinding.cheatindicatorlbl.setText(R.string.cheat_used);
@@ -270,23 +263,13 @@ public class Settings extends AppCompatActivity {
             SDLActivity.onNativeKeyUp(KeyEvent.KEYCODE_T);
         });
 
-        mBinding.rankingbtn.setOnClickListener(v -> {
-            LeaderboardActivity.isCheatRanking = false;
-            Intent i = new Intent(this, LeaderboardActivity.class);
-            startActivity(i);
-        });
-
-        mBinding.cheatrankingbtn.setOnClickListener(v -> {
-            LeaderboardActivity.isCheatRanking = true;
-            Intent i = new Intent(this, LeaderboardActivity.class);
-            startActivity(i);
-        });
+        mBinding.rankingbtn.setOnClickListener(v -> startActivity(new Intent(this, HighScoresActivity.class)));
 
         checkLatestRelease();
     }
 
     public void checkLatestRelease() {
-        String URL = "https://api.github.com/repos/fexed/Pinball-on-Android/releases/latest";
+        String URL = RELEASES_API;
         Response.Listener<String> listener = response -> {};
         Response.ErrorListener errorListener = response -> {};
         StringRequest GETReleaseRequest = new StringRequest(Request.Method.GET, URL, listener, errorListener) {
@@ -296,11 +279,14 @@ public class Settings extends AppCompatActivity {
                 if (response != null) {
                     try {
                         JSONObject received = new JSONObject(new String(response.data));
-                        String tag = received.getString("tag_name");Log.d("VERS", "current: " + BuildConfig.VERSION_NAME + " - GitHub: " + tag);
-                        String downloadurl = received.getJSONArray("assets").getJSONObject(0).getString("browser_download_url");
+                        String tag = received.getString("tag_name");
+                        JSONArray assets = received.optJSONArray("assets");
+                        String downloadurl = assets != null && assets.length() > 0
+                                ? assets.getJSONObject(0).getString("browser_download_url")
+                                : received.optString("html_url", RELEASES_PAGE);
                         Log.d("VERS", "current: " + BuildConfig.VERSION_NAME + " - GitHub: " + tag);
 
-                        if (!tag.equals(BuildConfig.VERSION_NAME)) {
+                        if (isNewerVersion(tag, BuildConfig.VERSION_NAME)) {
                             runOnUiThread(() -> {
                                 SpannableString content = new SpannableString(getString(R.string.newversdl, tag));
                                 content.setSpan(new UnderlineSpan(), 0, getString(R.string.newversdl, tag).length(), 0);
@@ -327,6 +313,29 @@ public class Settings extends AppCompatActivity {
         };
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         queue.add(GETReleaseRequest);
+    }
+
+    /** True when release tag (e.g. "v1.2") is a higher version than the installed versionName. */
+    static boolean isNewerVersion(String tag, String current) {
+        int[] a = versionParts(tag), b = versionParts(current);
+        for (int i = 0; i < Math.max(a.length, b.length); i++) {
+            int x = i < a.length ? a[i] : 0, y = i < b.length ? b[i] : 0;
+            if (x != y) return x > y;
+        }
+        return false;
+    }
+
+    private static int[] versionParts(String version) {
+        String[] parts = version.replaceAll("^[^0-9]*", "").split("[^0-9]+");
+        int[] out = new int[parts.length];
+        for (int i = 0; i < parts.length; i++) {
+            try {
+                out[i] = Integer.parseInt(parts[i]);
+            } catch (NumberFormatException e) {
+                out[i] = 0;
+            }
+        }
+        return out;
     }
 
     private void updateCameraZoomLabel(int percent) {

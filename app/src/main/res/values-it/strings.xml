@@ -13,14 +13,13 @@
     <string name="remainingballssettings">Indicatore palline rimanenti</string>
     <string name="tiltbuttons">Pulsanti tilt</string>
     <string name="username">Nome utente</string>
-    <string name="credits">3D Pinball Table was created for Microsoft by Maxis.\nCopyright © 1995 Maxis.\n\nReverse engineering: k4zmu2a\nPorting Android originale: Iscle\nPorting Android attuale: fexed, th3vanger</string>
+    <string name="credits">3D Pinball Table was created for Microsoft by Maxis.\nCopyright © 1995 Maxis.\n\nReverse engineering: k4zmu2a\nPorting Android originale: Iscle\nPorting Android: fexed, th3vanger\nPorting RG Rotate: liunev</string>
     <string name="restartprompt">Tieni premuto per riavviare la partita</string>
     <string name="volume">Volume</string>
     <string name="customfonts">Font personalizzato</string>
     <string name="plungerpopup">Popup del lanciatore</string>
     <string name="plungerhint">Tieni premuto sullo schermo per lanciare la pallina</string>
-    <string name="goto_googleplay"><u><a hred="https://play.google.com/store/apps/dev?id=6687966458279653723">Dai un\'occhiata alle mie altre app!</a></u></string>
-    <string name="goto_github"><u><a hred="https://github.com/fexed/Pinball-on-Android/releases">Guarda l\'ultima versione</a></u></string>
+    <string name="goto_github">Guarda l\'ultima versione</string>
     <string name="cheat_title">Trucchi</string>
     <string name="cheat_disclaimer">Da attivare prima di lanciare la prima pallina (nota: alcuni trucchi non funzionano ancora)</string>
     <string name="cheat_gmax">gmax - Attiva il Pozzo Gravitazionale</string>
@@ -58,4 +57,10 @@
     <string name="music">Musica</string>
     <string name="gamepad_paused">Gioco in pausa\nStart per riprendere</string>
     <string name="gamepad_newgame">Select per una nuova partita</string>
+    <string name="highscores_title">Punteggi migliori</string>
+    <string name="localscores_button">Mostra i punteggi</string>
+    <string name="highscores_empty">Nessuna partita ancora. Finisci una partita per entrare in classifica!</string>
+    <string name="highscores_clear">Cancella i punteggi</string>
+    <string name="highscores_clear_confirm">Eliminare tutti i punteggi salvati su questo dispositivo?</string>
+    <string name="highscores_cheats">cheat usati</string>
 </resources>

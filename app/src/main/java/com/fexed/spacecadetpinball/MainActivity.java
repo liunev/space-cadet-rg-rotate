@@ -350,7 +350,7 @@ public class MainActivity extends SDLActivity {
 
         @Override
         public void onHighScorePresented(int score) {
-            if (HighScoreHandler.postHighScore(getContext(), score)) {
+            if (LocalScores.add(score)) {
                 runOnUiThread(() -> Toast.makeText(getContext(), getString(R.string.newhighscore, score), Toast.LENGTH_LONG).show());
             }
         }

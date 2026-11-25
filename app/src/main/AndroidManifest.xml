@@ -14,7 +14,7 @@
         android:theme="@style/Theme.SpaceCadetPinball"
         tools:replace="android:supportsRtl">
         <activity
-            android:name=".LeaderboardActivity"
+            android:name=".HighScoresActivity"
             android:exported="false" />
         <activity
             android:name=".Settings"

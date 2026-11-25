@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="?android:attr/listDivider"
-            app:layout_constraintBottom_toTopOf="@+id/textView18"
+            app:layout_constraintBottom_toTopOf="@+id/textView16"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rankingbtnlyt" />
@@ -27,10 +27,10 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="?android:attr/listDivider"
-            app:layout_constraintBottom_toTopOf="@+id/textView16"
+            app:layout_constraintBottom_toTopOf="@+id/textView18"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/githubtxtv" />
+            app:layout_constraintTop_toBottomOf="@+id/cheats" />
 
         <View
             android:id="@+id/divider4"
@@ -126,7 +126,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@string/leaderboard"
+            android:text="@string/highscores_title"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -145,7 +145,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rankingbtnlyt" />
+            app:layout_constraintTop_toBottomOf="@+id/cheats" />
 
         <TextView
             android:id="@+id/verstxtv"
@@ -211,21 +211,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView18" />
 
-        <TextView
-            android:id="@+id/gplaytxtv"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:autoLink="web"
-            android:gravity="center_horizontal"
-            android:text="@string/goto_googleplay"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/textView2"
-            app:layout_constraintTop_toBottomOf="@+id/highscoretxtv2" />
 
         <TextView
             android:id="@+id/githubtxtv"
@@ -240,7 +225,9 @@
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/textView17"
-            app:layout_constraintTop_toBottomOf="@+id/textView17" />
+            app:layout_constraintTop_toBottomOf="@+id/textView17"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="24dp" />
 
         <EditText
             android:id="@+id/inpttxtusername"
@@ -254,22 +241,8 @@
             android:inputType="text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/onlineleaderboard" />
-
-        <Switch
-            android:id="@+id/onlineleaderboard"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:minHeight="48dp"
-            android:text="@string/onlineleaderboard"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView21" />
+
 
         <TextView
             android:id="@+id/textView3"
@@ -306,7 +279,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/githubtxtv" />
+            app:layout_constraintTop_toBottomOf="@+id/rankingbtnlyt" />
 
         <TextView
             android:id="@+id/textView"
@@ -329,7 +302,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/textView2"
-            app:layout_constraintTop_toBottomOf="@+id/gplaytxtv" />
+            app:layout_constraintTop_toBottomOf="@+id/highscoretxtv2" />
 
         <TextView
             android:id="@+id/textView4"
@@ -409,14 +382,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/highscoretxtv">
 
-            <Button
-                android:id="@+id/cheatrankingbtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:text="@string/cheatleaderboard"
-                android:visibility="gone" />
 
             <Button
                 android:id="@+id/rankingbtn"
@@ -424,19 +389,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:text="@string/leaderboard" />
+                android:text="@string/localscores_button" />
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/resetuid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="reset"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rankingbtnlyt" />
 
         <Switch
             android:id="@+id/cstmfnts"

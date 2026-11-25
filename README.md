@@ -60,11 +60,15 @@ launch" hint are hidden; the touch zones themselves still work.
 
 Code: [`SpaceCadetPinball/gba_controls.cpp`](SpaceCadetPinball/gba_controls.cpp).
 
-## Online leaderboard
+## High scores and updates
 
-The upstream app uploads your high score and username to a global leaderboard. Turn off
-**Settings > Global online leaderboard** to stop all leaderboard traffic: no uploads, no ranking
-downloads, and the leaderboard button is hidden. Your local high score is still kept.
+The upstream online leaderboard is removed: nothing is uploaded or downloaded. Finished games
+are stored on the device instead (top 20, with name, date and whether cheats were used) and
+shown under **Settings > Show high scores**, where they can also be cleared.
+
+**Settings** checks this fork's [GitHub releases](https://github.com/liunev/space-cadet-rg-rotate/releases)
+for updates. Tag releases `v<versionName>` (e.g. `v1.1`); a release is offered when its tag is a
+higher version than the installed `versionName`.
 
 ## Building
 

@@ -29,7 +29,7 @@ multiball it follows the lowest ball.
 
 Zoom is set in **Settings > Ball camera zoom** (1.0x = original whole-table view, default 1.6x,
 max 3.0x). While zoomed, the score, ball number and the info/mission text from the game's
-sidebar move into a bar at the top of the screen, and the table is drawn below it, so nothing
+sidebar move into a two-row bar at the top of the screen, and the table is drawn below it, so nothing
 covers the playfield. Setting the zoom to 1.0x brings back the original layout.
 
 Code: [`SpaceCadetPinball/camera.cpp`](SpaceCadetPinball/camera.cpp).
@@ -46,16 +46,25 @@ from the decompilation (`src/options.c`, `SetButtonConfigInputs`):
 | B | Launch ball |
 | L / R | Nudge left / right |
 | L + R together | Nudge up |
+| Start | Pause / resume (F3) |
+| Select | New game (F2): one press after game over, two presses within 3 s during a game |
 
 Tilt timing matches the GBA's `ProcessTiltInput`: a nudge fires 4 frames after the press, the
 last direction pressed in that window wins (that's how L+R becomes "up"), and there's a
 24-frame cooldown before the next one. Turn the setting off for Space Cadet's original
 controller layout (L1/R1 flippers, A plunger, D-pad nudge).
 
+The in-game "F3 to Resume" / "F2 Starts New Game" messages name Start and Select instead.
 While it's on, the on-screen touch zone labels (Left/Right/Tilt) and the "keep pressed to
 launch" hint are hidden; the touch zones themselves still work.
 
 Code: [`SpaceCadetPinball/gba_controls.cpp`](SpaceCadetPinball/gba_controls.cpp).
+
+## Online leaderboard
+
+The upstream app uploads your high score and username to a global leaderboard. Turn off
+**Settings > Global online leaderboard** to stop all leaderboard traffic: no uploads, no ranking
+downloads, and the leaderboard button is hidden. Your local high score is still kept.
 
 ## Building
 

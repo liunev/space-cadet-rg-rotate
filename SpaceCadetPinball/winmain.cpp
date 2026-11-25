@@ -9,6 +9,7 @@
 #include "pb.h"
 #include "render.h"
 #include "Sound.h"
+#include "TTextBox.h"
 
 SDL_Window* winmain::MainWindow = nullptr;
 SDL_Renderer* winmain::Renderer = nullptr;
@@ -456,10 +457,24 @@ int winmain::event_handler(const SDL_Event* event)
                 pause();
                 break;
             case SDL_CONTROLLER_BUTTON_BACK:
-                if (single_step)
+                // Select = F2 (new game). After game over one press is enough; during a game
+                // the first press shows "Select Starts New Game" and a second press within
+                // 3 seconds confirms, so a stray press can't throw away a game.
                 {
-                    SDL_Event event{ SDL_QUIT };
-                    SDL_PushEvent(&event);
+                    static Uint32 newGameArmedAt = 0;
+                    const Uint32 now = SDL_GetTicks();
+                    if (pb::game_mode == GameModes::GameOver || DemoActive ||
+                        (newGameArmedAt != 0 && now - newGameArmedAt < 3000))
+                    {
+                        newGameArmedAt = 0;
+                        new_game();
+                    }
+                    else
+                    {
+                        newGameArmedAt = now;
+                        if (pinball::InfoTextBox)
+                            pinball::InfoTextBox->Display(pinball::get_rc_string(24, 0), 3.0, 2);
+                    }
                 }
                 break;
             default:;

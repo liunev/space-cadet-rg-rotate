@@ -320,6 +320,7 @@ void pb::pause_continue()
 		if (MainTable)
 			MainTable->Message(1008, time_now);
 		pinball::InfoTextBox->Display(pinball::get_rc_string(22, 0), -1.0, 2);
+		SpaceCadetPinballJNI::notifyGameState(SpaceCadetPinballJNI::GAMESTATE::PAUSED);
 		midi::music_stop();
 		Sound::Deactivate();
 	}
@@ -327,6 +328,7 @@ void pb::pause_continue()
 	{
 		if (MainTable)
 			MainTable->Message(1009, 0.0);
+		SpaceCadetPinballJNI::notifyGameState(SpaceCadetPinballJNI::GAMESTATE::RESUMED);
 		if (!demo_mode)
 		{
 			char* text;

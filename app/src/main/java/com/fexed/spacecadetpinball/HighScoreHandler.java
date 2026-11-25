@@ -57,7 +57,7 @@ public class HighScoreHandler {
             }
         }
         
-        if (PrefsHelper.getHighScore() > 0) postScore(context, true);
+        if (PrefsHelper.getHighScore() > 0 && PrefsHelper.getOnlineLeaderboard()) postScore(context, true);
 
         return updated;
     }
@@ -91,6 +91,10 @@ public class HighScoreHandler {
     }
 
     static void getRanking(Context context) {
+        if (!PrefsHelper.getOnlineLeaderboard()) {
+            if (leaderboardActivity != null) leaderboardActivity.onLeaderboardError(null);
+            return;
+        }
         List<LeaderboardElement> corpus = new ArrayList<>();
         Response.Listener<String> listener = response -> {
             try {
@@ -119,6 +123,7 @@ public class HighScoreHandler {
 
 
     static void getCurrentRank(Context context) {
+        if (!PrefsHelper.getOnlineLeaderboard()) return;
         Response.Listener<String> listener = response -> {
             try {
                 SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.UK);
@@ -140,6 +145,7 @@ public class HighScoreHandler {
     }
 
     static void postScore(Context context, boolean verbose) {
+        if (!PrefsHelper.getOnlineLeaderboard()) return;
         if (!PrefsHelper.getUsername("").equals("")) {
             try {
                 JSONObject objectToEncode = new JSONObject();

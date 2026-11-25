@@ -12,6 +12,9 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -51,6 +54,7 @@ public class MainActivity extends SDLActivity {
     private int gamesInSession = 0;
     private boolean hudMode = false;
     private boolean rotatedToLandscape = false;
+    private String hudInfo = "", hudMission = "";
 
     static private MediaPlayer player;
 
@@ -192,8 +196,7 @@ public class MainActivity extends SDLActivity {
         });
         mBinding.hudSettings.setOnClickListener(view -> mBinding.settingsbtn.performClick());
 
-        TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(mBinding.hudInfo, 10, 16, 1, android.util.TypedValue.COMPLEX_UNIT_SP);
-        TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(mBinding.hudMission, 9, 14, 1, android.util.TypedValue.COMPLEX_UNIT_SP);
+        TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(mBinding.hudText, 9, 15, 1, android.util.TypedValue.COMPLEX_UNIT_SP);
 
         // Tell the native camera how much of the top of the screen the HUD bar covers.
         mBinding.hud.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> pushHudTop());
@@ -242,6 +245,27 @@ public class MainActivity extends SDLActivity {
         mBinding.tiltBottom.setText(tilt);
     }
 
+    /** HUD second row: "<info>  ·  <mission>", the mission part in yellow. */
+    private void updateHudText() {
+        SpannableStringBuilder sb = new SpannableStringBuilder(hudInfo);
+        if (!hudInfo.isEmpty() && !hudMission.isEmpty()) sb.append("  ·  ");
+        int missionStart = sb.length();
+        sb.append(hudMission);
+        sb.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.hud_mission, getTheme())),
+                missionStart, sb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mBinding.hudText.setText(sb);
+    }
+
+    /** Game texts, with the F2/F3 hints rewritten for the gamepad (Select / Start). */
+    private void putGameTexts() {
+        putTranslations();
+        putString(26, PrefsHelper.getUsername("Player 1"));  //TODO abstract ids
+        if (PrefsHelper.getGbaControls()) {
+            putString(22, getString(R.string.gamepad_paused));
+            putString(24, getString(R.string.gamepad_newgame));
+        }
+    }
+
     private static String formatScore(int score) {
         return NumberFormat.getIntegerInstance().format(score);
     }
@@ -283,10 +307,18 @@ public class MainActivity extends SDLActivity {
     private final StateHelper.IStateListener mStateListener = new StateHelper.IStateListener() {
         @Override
         public void onStateChanged(int state) {
+            if (state == GameState.PAUSED || state == GameState.RESUMED) {
+                // In-game pause (Start / F3): pause the music along with the game.
+                runOnUiThread(() -> {
+                    if (player == null || !PrefsHelper.getMusic()) return;
+                    if (state == GameState.PAUSED) player.pause();
+                    else if (isPlaying) player.start();
+                });
+                return;
+            }
             setVolume(PrefsHelper.getVolume());
             if (player != null) player.setVolume(PrefsHelper.getVolume()/(float) 100, PrefsHelper.getVolume()/(float) 100);
-            putTranslations();
-            putString(26, PrefsHelper.getUsername("Player 1"));  //TODO abstract ids
+            putGameTexts();
 
             if (state == GameState.RUNNING) {
                 gamesInSession++;
@@ -333,11 +365,13 @@ public class MainActivity extends SDLActivity {
             final String fstr = str.replace("\n", " ");
             if (type == 1) runOnUiThread(() -> {
                 mBinding.missiontxt.setText(fstr);
-                mBinding.hudMission.setText(fstr);
+                hudMission = fstr;
+                updateHudText();
             });
             else runOnUiThread(() -> {
                 mBinding.infotxt.setText(fstr);
-                mBinding.hudInfo.setText(fstr);
+                hudInfo = fstr;
+                updateHudText();
             });
         }
 
@@ -345,11 +379,13 @@ public class MainActivity extends SDLActivity {
         public void onClearText(int type) {
             if (type == 1) runOnUiThread(() -> {
                 mBinding.missiontxt.setText("");
-                mBinding.hudMission.setText("");
+                hudMission = "";
+                updateHudText();
             });
             else runOnUiThread(() -> {
                 mBinding.infotxt.setText("");
-                mBinding.hudInfo.setText("");
+                hudInfo = "";
+                updateHudText();
             });
         }
 
@@ -416,6 +452,7 @@ public class MainActivity extends SDLActivity {
 
         if (!isPlaying) pauseNativeThread();
         if (isGameReady) {
+            putGameTexts();
             setVolume(PrefsHelper.getVolume());
             if (player != null) player.setVolume(PrefsHelper.getVolume()/(float) 100, PrefsHelper.getVolume()/(float) 100);
         }
@@ -481,9 +518,7 @@ public class MainActivity extends SDLActivity {
             mBinding.hudScore.setTextColor(purple);
             mBinding.hudBall.setTypeface(bauhaus);
             mBinding.hudBall.setTextColor(purple);
-            mBinding.hudInfo.setTypeface(bauhaus);
-            mBinding.hudInfo.setTextColor(Color.WHITE);
-            mBinding.hudMission.setTypeface(bauhaus);
+            mBinding.hudText.setTypeface(bauhaus);
             mBinding.plunger.setTypeface(ResourcesCompat.getFont(getContext(), R.font.bauhauscheavy));
             // not editing the plunger because it's a button (and using its color as default color)
             mBinding.bottomPlunger.setTypeface(ResourcesCompat.getFont(getContext(), R.font.bauhauscheavy));
@@ -511,9 +546,7 @@ public class MainActivity extends SDLActivity {
             mBinding.hudScore.setTextColor(Color.WHITE);
             mBinding.hudBall.setTypeface(Typeface.DEFAULT);
             mBinding.hudBall.setTextColor(Color.WHITE);
-            mBinding.hudInfo.setTypeface(Typeface.DEFAULT);
-            mBinding.hudInfo.setTextColor(Color.WHITE);
-            mBinding.hudMission.setTypeface(Typeface.DEFAULT);
+            mBinding.hudText.setTypeface(Typeface.DEFAULT);
             mBinding.plunger.setTypeface(Typeface.DEFAULT);
             mBinding.tiltLeft.setTypeface(Typeface.DEFAULT);
             mBinding.tiltLeft.setTextColor(Color.WHITE);

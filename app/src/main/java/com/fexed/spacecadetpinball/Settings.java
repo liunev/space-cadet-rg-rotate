@@ -48,7 +48,7 @@ public class Settings extends AppCompatActivity {
         mBinding = ActivitySettingsBinding.inflate(getLayoutInflater());
         View view = mBinding.getRoot();
         setContentView(view);
-        if (PrefsHelper.getUsername(null) != null) {
+        if (PrefsHelper.getUsername(null) != null && PrefsHelper.getOnlineLeaderboard()) {
             HighScoreHandler.postScore(getApplicationContext(), false);
         }
 
@@ -162,6 +162,13 @@ public class Settings extends AppCompatActivity {
 
         mBinding.gbacontrols.setChecked(PrefsHelper.getGbaControls());
         mBinding.gbacontrols.setOnCheckedChangeListener((compoundButton, checked) -> PrefsHelper.setGbaControls(checked));
+
+        mBinding.onlineleaderboard.setChecked(PrefsHelper.getOnlineLeaderboard());
+        mBinding.rankingbtnlyt.setVisibility(PrefsHelper.getOnlineLeaderboard() ? View.VISIBLE : View.GONE);
+        mBinding.onlineleaderboard.setOnCheckedChangeListener((compoundButton, checked) -> {
+            PrefsHelper.setOnlineLeaderboard(checked);
+            mBinding.rankingbtnlyt.setVisibility(checked ? View.VISIBLE : View.GONE);
+        });
 
         if (PrefsHelper.getCheatsUsed()) {
             mBinding.cheatindicatorlbl.setText(R.string.cheat_used);

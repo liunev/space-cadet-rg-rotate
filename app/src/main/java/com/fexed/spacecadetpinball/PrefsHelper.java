@@ -20,6 +20,7 @@ public class PrefsHelper {
     private static final String KEY_CUSTOMFONTS = "customfonts";
     private static final String KEY_CAMERAZOOM = "camerazoom";
     private static final String KEY_GBACONTROLS = "gbacontrols";
+    private static final String KEY_ONLINELEADERBOARD = "onlineleaderboard";
 
     public static SharedPreferences getPrefs() {
         return prefs;
@@ -141,5 +142,14 @@ public class PrefsHelper {
 
     public static void setGbaControls(boolean value) {
         prefs.edit().putBoolean(KEY_GBACONTROLS, value).apply();
+    }
+
+    /** Global online leaderboard. Off = no score uploads and no ranking downloads. */
+    public static boolean getOnlineLeaderboard() {
+        return prefs.getBoolean(KEY_ONLINELEADERBOARD, true);
+    }
+
+    public static void setOnlineLeaderboard(boolean value) {
+        prefs.edit().putBoolean(KEY_ONLINELEADERBOARD, value).apply();
     }
 }

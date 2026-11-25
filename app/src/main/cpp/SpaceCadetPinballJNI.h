@@ -25,7 +25,9 @@ public:
 
     enum GAMESTATE {
         RUNNING = 1,
-        FINISHED = 2
+        FINISHED = 2,
+        PAUSED = 3,
+        RESUMED = 4
     };
 
     static void cheatsUsed();

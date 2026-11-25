@@ -16,6 +16,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -268,6 +269,30 @@ public class MainActivity extends SDLActivity {
 
     private static String formatScore(int score) {
         return NumberFormat.getIntegerInstance().format(score);
+    }
+
+    /**
+     * The RG Rotate's Home button arrives as KEYCODE_BACK from the gamepad, and SDL maps a
+     * gamepad BACK key to the same controller button as Select (new game). Handle it here
+     * instead, before SDL sees it, and make it leave to the launcher like a home button.
+     * The real Select button (KEYCODE_BUTTON_SELECT) and the touch back gesture are unaffected.
+     */
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && isFromGamepad(event)) {
+            if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
+                moveTaskToBack(true);
+            }
+            return true;
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    private static boolean isFromGamepad(KeyEvent event) {
+        InputDevice device = event.getDevice();
+        int sources = event.getSource() | (device != null ? device.getSources() : 0);
+        return (sources & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD
+                || (sources & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK;
     }
 
     private void copyAssets(File filesDir) {

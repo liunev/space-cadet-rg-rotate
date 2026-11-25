@@ -48,6 +48,7 @@ from the decompilation (`src/options.c`, `SetButtonConfigInputs`):
 | L + R together | Nudge up |
 | Start | Pause / resume (F3) |
 | Select | New game (F2): one press after game over, two presses within 3 s during a game |
+| Home | Back to the Android home screen; the game keeps its state |
 
 Nudge timing takes the GBA's `ProcessTiltInput` delay: a nudge starts 4 frames after the press
 and the last direction pressed in that window wins (that's how L+R becomes "up"). The GBA's

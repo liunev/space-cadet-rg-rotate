@@ -14,6 +14,8 @@
 // Tilt timing follows ProcessTiltInput (src/all_board_process2.c): a tilt fires 4 frames after
 // the press, the last direction pressed in that window wins (so L and R pressed together give
 // an upward tilt), and no new tilt can start for 24 frames afterwards.
+// The nudge itself is Space Cadet's: it lasts as long as the button is held (shifted by that
+// delay), so the tilt meter behaves like the original keyboard controls.
 
 class gba_controls
 {

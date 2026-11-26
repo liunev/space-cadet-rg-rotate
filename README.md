@@ -5,6 +5,18 @@
 A fork of [fexed/Pinball-on-Android](https://github.com/fexed/Pinball-on-Android) tuned for the
 **Anbernic RG Rotate** (3.5" 720x720 square screen) and other small displays.
 
+<p align="center">
+  <img src="docs/gameplay.gif" width="400" alt="Gameplay on the RG Rotate: the camera follows the ball up the table and back down to the flippers">
+</p>
+
+<p align="center">
+  <img src="docs/gameplay.png" width="260" alt="Zoomed table with the score and mission bar at the top">
+  <img src="docs/settings.png" width="260" alt="Settings: ball camera zoom slider and Pokémon Pinball (GBA) controls toggle">
+  <img src="docs/highscores.png" width="260" alt="Local high scores page">
+</p>
+
+Screenshots and recording taken on an RG Rotate at the default 1.1x zoom.
+
 ## Install
 
 Download the APK from the [latest release](https://github.com/liunev/space-cadet-rg-rotate/releases/latest)

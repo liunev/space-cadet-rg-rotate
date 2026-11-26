@@ -120,7 +120,7 @@ public class PrefsHelper {
 
     /** Camera zoom in percent: 100 = whole table (camera off), up to 300. */
     public static int getCameraZoom() {
-        return prefs.getInt(KEY_CAMERAZOOM, 160);
+        return prefs.getInt(KEY_CAMERAZOOM, 110);
     }
 
     public static void setCameraZoom(int value) {

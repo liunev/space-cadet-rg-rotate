@@ -55,7 +55,7 @@ namespace
 	}
 }
 
-float camera::Zoom = 1.6f;
+float camera::Zoom = 1.1f;
 int camera::HudTop = 0;
 bool camera::initialized = false, camera::introPending = true;
 float camera::accumulatorMs = 0;

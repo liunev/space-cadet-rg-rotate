@@ -41,7 +41,7 @@ screen; Space Cadet zoomed in is much wider than the view, so horizontally the c
 proportion to the ball's x position, with the same easing, dead zone and speed limit. During
 multiball it follows the lowest ball.
 
-Zoom is set in **Settings > Ball camera zoom** (1.0x = original whole-table view, default 1.6x,
+Zoom is set in **Settings > Ball camera zoom** (1.0x = original whole-table view, default 1.1x,
 max 3.0x). While zoomed, the score, ball number and the info/mission text from the game's
 sidebar move into a two-row bar at the top of the screen, and the table is drawn below it, so nothing
 covers the playfield. Setting the zoom to 1.0x brings back the original layout.

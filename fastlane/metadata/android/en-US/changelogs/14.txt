@@ -1,0 +1,7 @@
+Space Cadet RG Rotate 1.0
+- Ball-following camera with zoom setting and a two-row score/mission bar
+- Pokémon Pinball (GBA) gamepad layout, Start/Select for pause/new game, Home leaves the game
+- Original Space Cadet tilt behaviour with the gamepad
+- Local high scores page; online leaderboard and analytics removed
+- Flipper fix from upstream (#150), "Commendation" text fix
+- Update check uses this fork's GitHub releases

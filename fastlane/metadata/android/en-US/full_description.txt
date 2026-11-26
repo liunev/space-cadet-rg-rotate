@@ -1,3 +1,5 @@
-This app is a simple Android port of the classic game bundled with various Windows versions: 3D Space Cadet Pinbal.
+A fork of the Android port of 3D Pinball for Windows – Space Cadet, tuned for the Anbernic RG Rotate and other small screens.
 
-The game is constantly updated and soon an online scoreboard will be available.
+- Ball-following camera modelled on Pokémon Pinball: Ruby & Sapphire (GBA), with a score and mission bar
+- Pokémon Pinball (GBA) gamepad layout: D-pad Left / A flippers, B launch, L / R nudge, Start pause, Select new game
+- Local high score table; no online leaderboard and no analytics

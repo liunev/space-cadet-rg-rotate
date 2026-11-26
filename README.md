@@ -5,6 +5,20 @@
 A fork of [fexed/Pinball-on-Android](https://github.com/fexed/Pinball-on-Android) tuned for the
 **Anbernic RG Rotate** (3.5" 720x720 square screen) and other small displays.
 
+## Install
+
+Download the APK from the [latest release](https://github.com/liunev/space-cadet-rg-rotate/releases/latest)
+and open it on the device, or install it from a computer with `adb install space-cadet-rg-rotate-v1.0.apk`.
+It installs as `com.liunev.spacecadetrgrotate`, next to the original app if you have it.
+Settings tells you when a newer release is available.
+
+What's different from the original Android port:
+
+- Ball-following camera (from Pokémon Pinball: Ruby & Sapphire) with a score/mission bar
+- Pokémon Pinball (GBA) gamepad layout, Start/Select for pause/new game
+- High scores stored on the device; no online leaderboard, no analytics
+- Upstream flipper fix ([k4zmu2a#150](https://github.com/k4zmu2a/SpaceCadetPinball/pull/150))
+
 ## Ball camera
 
 The whole table plus the score sidebar is tiny on a 3.5" screen, so this fork adds a zoomed
@@ -81,39 +95,19 @@ Requires JDK 17-21, Android SDK platform 35, NDK `25.2.9519653` and CMake 4.1.2 
 manager). Then `./gradlew assembleDebug`. The fork installs as `com.liunev.spacecadetrgrotate`, so it
 can sit next to the original app. Firebase analytics was removed.
 
----
+Release builds (`./gradlew assembleRelease`) are signed when a git-ignored `keystore.properties`
+in the repo root provides `storeFile`, `storePassword`, `keyAlias` and `keyPassword`; without
+it the release APK is unsigned. To publish: bump `versionCode`/`versionName` in
+`app/build.gradle`, add `fastlane/metadata/android/en-US/changelogs/<versionCode>.txt`, and
+attach the APK to a GitHub release tagged `v<versionName>`.
 
-# Pinball-on-Android (upstream README)
-[![Android CI](https://github.com/fexed/Pinball-on-Android/actions/workflows/android.yml/badge.svg)](https://github.com/fexed/Pinball-on-Android/actions/workflows/android.yml)
-[![Validate Fastlane](https://github.com/fexed/Pinball-on-Android/actions/workflows/build.yml/badge.svg)](https://github.com/fexed/Pinball-on-Android/actions/workflows/build.yml)
-## Summary
+## Credits
 
-Android port of `3D Pinball for Windows – Space Cadet`, a game bundled with Windows.
+- 3D Pinball for Windows – Space Cadet: Cinematronics / Maxis, published by Microsoft (1995)
+- Decompilation and reverse engineering: [k4zmu2a/SpaceCadetPinball](https://github.com/k4zmu2a/SpaceCadetPinball) (MIT, see [LICENSE](LICENSE))
+- Original Android port: [Iscle](https://github.com/Iscle)
+- Android port: [fexed/Pinball-on-Android](https://github.com/fexed/Pinball-on-Android) (fexed, th3vanger)
+- Camera and controls reference: [pret/pokepinballrs](https://github.com/pret/pokepinballrs)
+- RG Rotate port: liunev
 
-Thanks to [k4zmu2a](https://github.com/k4zmu2a) for the original source code and to [iscle](https://github.com/Iscle) for the original Android porting
-
-## How to play
-
-Download the latest available [APK](https://github.com/fexed/Pinball-on-Android/releases)
-
-## Articles
-
-Some articles were written about this project! Thank you to everyone. Some articles I found are on: [Frandroid](https://www.frandroid.com/android/applications/1384165_un-developpeur-ressuscite-le-pinball-3d-de-windows-sur-android-voici-comment-y-jouer), [TudoCelular](https://www.tudocelular.com/android/noticias/n192126/windows-xp-jogo-classico-pinball-3d-android.html), [Libero Tecnologia](https://tecnologia.libero.it/uno-studente-italiano-ha-portato-il-flipper-di-windows-su-android-58522), [Oxii](https://www.oxii.vn/tech/tua-game-huyen-thoai-tren-windows-pinball-3d-da-co-phien-ban-tren-android-39480.html), [Tugatech](https://tugatech.com.pt/t46867-space-cadet-do-windows-agora-chega-tambem-ao-android), [Robotina](https://www.robotina.us/entretenimiento/El-Pinball-tiene-una-version-disponible-para-celulares-Android-20220701-0004.html), [Androiditaly](https://www.androiditaly.com/2022/07/02/3d-pinball-space-cadet-arriva-su-android-grazie-ad-un-progetto-amatoriale-tutto-italiano/), [Pasion Movil](https://www.pasionmovil.com/videojuegos-2/3d-pinball-el-clasico-juego-de-windows-xp-llega-a-dispositivos-android/), [Clubic](https://www.clubic.com/pro/entreprises/microsoft/actualite-429654-vous-en-reviez-et-ils-l-ont-fait-3d-pinball-de-windows-obtient-un-portage-sur-android.html), [Meteoweek](https://tech.meteoweek.com/2022/07/10/3d-pinball-non-e-piu-unesclusiva-windows-space-cadet-sara-anche-per-android-grazie-ad-uno-studente/), 
-
-## Known source ports
-
-| Platform           | Author          | URL                                                                                                        |
-| ------------------ | --------------- | ---------------------------------------------------------------------------------------------------------- |
-| Original source    | k4zmu2a         |<https://github.com/k4zmu2a/SpaceCadetPinball>                                                              |
-| PS Vita            | Axiom           | <https://github.com/suicvne/SpaceCadetPinball_Vita>                                                        |
-| Emscripten         | alula           | <https://github.com/alula/SpaceCadetPinball> <br> Play online: <https://alula.github.io/SpaceCadetPinball> |
-| Nintendo Switch    | averne          | <https://github.com/averne/SpaceCadetPinball-NX>                                                           |
-| webOS TV           | mariotaku       | <https://github.com/webosbrew/SpaceCadetPinball>                                                           |
-| Android (WIP)      | Iscle           | https://github.com/Iscle/SpaceCadetPinball                                                                 |
-| Nintendo Wii       | MaikelChan      | https://github.com/MaikelChan/SpaceCadetPinball                                                            |
-| Nintendo 3DS       | MaikelChan      | https://github.com/MaikelChan/SpaceCadetPinball/tree/3ds                                                   |
-| Nintendo Wii U     | IntriguingTiles | https://github.com/IntriguingTiles/SpaceCadetPinball-WiiU                                                  |
-| MorphOS            | BeWorld         | https://www.morphos-storage.net/?id=1688897                                                                |
-| AmigaOS 4          | rjd324          | http://aminet.net/package/game/actio/spacecadetpinball-aos4                                                |
-
-Platforms covered by this project: Android.
+The game data (table, sounds, music) belongs to its original copyright holders.

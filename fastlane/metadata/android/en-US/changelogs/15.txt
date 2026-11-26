@@ -1,0 +1,3 @@
+Space Cadet RG Rotate 1.1
+- Default ball camera zoom is now 1.1x (was 1.6x)
+- The app is marked as a game, so launchers with an Android games section can find it

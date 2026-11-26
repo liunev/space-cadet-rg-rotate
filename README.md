@@ -20,7 +20,7 @@ Screenshots and recording taken on an RG Rotate at the default 1.1x zoom.
 ## Install
 
 Download the APK from the [latest release](https://github.com/liunev/space-cadet-rg-rotate/releases/latest)
-and open it on the device, or install it from a computer with `adb install space-cadet-rg-rotate-v1.1.apk`.
+and open it on the device, or install it from a computer with `adb install space-cadet-rg-rotate-v1.2.apk`.
 It installs as `com.liunev.spacecadetrgrotate`, next to the original app if you have it.
 Settings tells you when a newer release is available.
 The app declares itself a game (`appCategory="game"`, `isGame`), for launchers and frontends

@@ -1,0 +1,2 @@
+Space Cadet RG Rotate 1.2
+- Fix a black table after returning to the game from some launchers (e.g. Cocoon) or the Home button
